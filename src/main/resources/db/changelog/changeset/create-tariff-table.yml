@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tariff
+      author: lemongrab32
+      changes:
+        - createTable:
+            tableName: tariff
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: base_price
+                  type: money
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client_category
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: client_type
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+

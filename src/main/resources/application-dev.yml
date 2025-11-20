@@ -1,0 +1,13 @@
+spring:
+  liquibase:
+    enabled: true
+    url: ${POSTGRES_URL}
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  datasource:
+    url: ${POSTGRES_URL}
+    hikari:
+      username: ${POSTGRES_USER}
+      password: ${POSTGRES_PASSWORD}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
