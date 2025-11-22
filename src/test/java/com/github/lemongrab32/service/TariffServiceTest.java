@@ -1,0 +1,112 @@
+package com.github.lemongrab32.service;
+
+import com.github.lemongrab32.controller.dto.TariffRequest;
+import com.github.lemongrab32.model.Tariff;
+import com.github.lemongrab32.repository.TariffRepository;
+import com.github.lemongrab32.service.impl.DefaultTariffService;
+import com.github.lemongrab32.type.Messages;
+import com.github.lemongrab32.type.Status;
+import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Collections;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class TariffServiceTest {
+
+	@Mock
+	private TariffRepository tariffRepository;
+
+	@InjectMocks
+	private DefaultTariffService tariffService;
+
+	private final Tariff tariff = Instancio.create(Tariff.class);
+
+	private AutoCloseable closeable;
+
+	@BeforeEach
+	public void setUp() {
+		closeable = MockitoAnnotations.openMocks(this);
+
+		Mockito.when(tariffRepository.findById(tariff.getId())).thenReturn(Optional.of(tariff));
+	}
+
+	@AfterEach
+	public void tearDown() throws Exception {
+		closeable.close();
+	}
+
+	@Test
+	@DisplayName("Получение страницы с тарифами")
+	public void findAll() {
+		Pageable pageable = PageRequest.of(0, 10);
+		Page<Tariff> page = new PageImpl<>(Collections.singletonList(tariff));
+
+		Mockito.when(tariffRepository.findAll(pageable))
+			.thenReturn(page);
+
+		var receivedPage = tariffService.getTariffs(pageable);
+		var receivedTariff = receivedPage.getFirst();
+
+		assertEquals(receivedPage.size(), page.getTotalElements());
+		assertEquals(tariff.getName(), receivedTariff.name());
+	}
+
+	@Test
+	@DisplayName("Добавление нового тарифа")
+	public void save() {
+		TariffRequest request = new TariffRequest(
+			tariff.getName(), tariff.getBasePrice(),
+			tariff.getClientCategory(), tariff.getClientType()
+		);
+
+		Mockito.when(tariffRepository.save(Mockito.any())).thenReturn(tariff);
+
+		var response = tariffService.save(request);
+
+		assertEquals(Status.SUCCESS, response.status());
+		assertEquals(Messages.SAVE_SUCCESS_MESSAGE, response.message());
+		assertEquals(tariff.getId(), response.tariffId());
+	}
+
+	@Test
+	@DisplayName("Обновление данных тарифа")
+	public void update() {
+		TariffRequest request = new TariffRequest(
+			"testName", 1.0,
+			tariff.getClientCategory(), tariff.getClientType()
+		);
+
+		Mockito.when(tariffRepository.save(tariff)).thenReturn(tariff);
+
+		var response = tariffService.update(tariff.getId(), request);
+
+		assertEquals(Status.SUCCESS, response.status());
+		assertEquals(Messages.UPDATE_SUCCESS_MESSAGE, response.message());
+	}
+
+	@Test
+	@DisplayName("Удаление тарифа")
+	public void delete() {
+		Mockito.doNothing().when(tariffRepository).deleteById(tariff.getId());
+
+		var response = tariffService.delete(tariff.getId());
+
+		assertEquals(Status.SUCCESS, response.status());
+		assertEquals(Messages.DELETE_SUCCESS_MESSAGE, response.message());
+	}
+
+}

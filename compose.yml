@@ -1,0 +1,34 @@
+networks:
+  gym-network:
+
+services:
+
+  membership-service:
+    container_name: membership-service
+    build: .
+    restart: unless-stopped
+    ports:
+      - ${MEMBERSHIP_SERVICE_PORT}:8080
+    networks:
+      - gym-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    container_name: postgres
+    image: postgres:18-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d $POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - path: ./default.env
+        required: true
+    ports:
+      - ${POSTGRES_PORT}:5432
+    networks:
+      gym-network:
+
