@@ -33,6 +33,12 @@ public class DefaultTariffService implements TariffService {
 	}
 
 	@Override
+	public Tariff getTariffById(Integer id) {
+		return repository.findById(id)
+			.orElseThrow(() -> new TariffNotFoundException("Tariff with id " + id + " not found"));
+	}
+
+	@Override
 	public TariffResponse save(TariffRequest request) {
 		Tariff saved = repository.save(
 			Tariff.builder()

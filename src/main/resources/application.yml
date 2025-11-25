@@ -1,3 +1,14 @@
 spring:
   application:
     name: membership-service
+
+membership:
+  private:
+    hour-multiplier: 0.47
+    mid-multiplier: 0.05
+    max-multiplier: 0.1
+  enterprise:
+    mid-multiplier: 0.05
+    max-multiplier: 0.1
+    top: 50000
+    bottom: 10000
