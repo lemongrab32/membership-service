@@ -17,3 +17,7 @@ spring:
       port: ${REDIS_PORT}
       username: ${REDIS_USER}
       password: ${REDIS_USER_PASSWORD}
+
+client:
+  payment:
+    url: ${PAYMENT_CLIENT_URL}

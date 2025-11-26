@@ -21,7 +21,7 @@ databaseChangeLog:
                   name: end_date
                   type: date
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: final_price
                   type: money
@@ -30,6 +30,16 @@ databaseChangeLog:
               - column:
                   name: client_id
                   type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: hours_remaining
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: is_active
+                  type: bool
                   constraints:
                     nullable: false
               - column:

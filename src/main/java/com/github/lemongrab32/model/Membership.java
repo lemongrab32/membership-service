@@ -1,5 +1,6 @@
 package com.github.lemongrab32.model;
 
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -7,6 +8,11 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Table("membership")
 public class Membership {
 
@@ -24,6 +30,12 @@ public class Membership {
 
 	@Column("client_id")
 	private UUID clientId;
+
+	@Column("hours_remaining")
+	private Integer hoursRemaining;
+
+	@Column("is_active")
+	private boolean isActive;
 
 	@Column("tariff_id")
 	private Integer tariffId;
