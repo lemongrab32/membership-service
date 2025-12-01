@@ -1,24 +1,19 @@
 package com.github.lemongrab32.util.impl;
 
 import com.github.lemongrab32.controller.dto.MembershipRequest;
-import com.github.lemongrab32.exception.InvalidClientOptionsException;
 import com.github.lemongrab32.util.MembershipCalculator;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
 
-@Component
+@AllArgsConstructor
 public class PrivateMembershipCalculator extends MembershipCalculator {
 
-	@Value("${membership.private.hour-multiplier: 0.47}")
-	private double hourMultiplier;
-	@Value("${membership.private.mid-multiplier: 0.05}")
-	private double midMultiplier;
-	@Value("${membership.private.max-multiplier: 0.1}")
-	private double maxMultiplier;
+	private final Double hourMultiplier;
+	private final Double midMultiplier;
+	private final Double maxMultiplier;
 
 	@Override
 	public double calculate(MembershipRequest request, Double basePrice) {
-		if (request.hours() > 0) {
+		if (request.hours() != null && request.hours() > 0) {
 			return calcHourly(request, basePrice);
 		}
 

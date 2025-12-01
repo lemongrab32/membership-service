@@ -5,6 +5,7 @@ import com.github.lemongrab32.controller.dto.*;
 import com.github.lemongrab32.exception.InvalidClientOptionsException;
 import com.github.lemongrab32.model.Membership;
 import com.github.lemongrab32.model.Tariff;
+import com.github.lemongrab32.repository.MembershipConfigRepository;
 import com.github.lemongrab32.repository.MembershipRepository;
 import com.github.lemongrab32.service.MembershipService;
 import com.github.lemongrab32.service.TariffService;
@@ -18,12 +19,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DefaultMembershipService implements MembershipService {
 
 	private final MembershipRepository membershipRepository;
+	private final MembershipConfigRepository membershipConfigRepository;
 	private final TariffService tariffService;
 	private final PaymentServiceClient paymentServiceClient;
 	private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
@@ -37,7 +40,8 @@ public class DefaultMembershipService implements MembershipService {
 			throw new InvalidClientOptionsException("Invalid client request");
 		}
 
-		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type());
+		var props = getProperties();
+		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type(), props);
 
 		return new CalculationResponse(
 			Status.SUCCESS, Messages.CALCULATION_SUCCESS_MESSAGE,
@@ -87,6 +91,16 @@ public class DefaultMembershipService implements MembershipService {
 			Messages.MEMBERSHIP_SUCCESS_MESSAGE,
 			request.tariffId()
 		);
+	}
+
+	@Override
+	public Map<String, Object> getProperties() {
+		return membershipConfigRepository.getProperties();
+	}
+
+	@Override
+	public String setProperty(PropertyRequest request) {
+		return membershipConfigRepository.setProperty(request);
 	}
 
 }
