@@ -32,7 +32,9 @@ public class DefaultMembershipService implements MembershipService {
 	private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
 	@Override
-	@Cacheable(value = "CALC_CACHE", key = "#request.category() + #request.type() + #request.donation() + #request.months() + #request.hours() + #request.tariffId()")
+	@Cacheable(value = "CALC_CACHE", key = "#request.category().toString() + " +
+		"#request.type().toString() + #request.donation() + #request.months() + " +
+		"#request.hours() + #request.tariffId()")
 	public CalculationResponse calculate(MembershipRequest request) {
 		Tariff tariff = tariffService.getTariffById(request.tariffId());
 
@@ -55,7 +57,7 @@ public class DefaultMembershipService implements MembershipService {
 		var calcResponse = calculate(request);
 		double finalPrice = calcResponse.finalPrice();
 
-		var paymentResponse = paymentServiceClient.createPayment(
+		paymentServiceClient.createPayment(
 			new PaymentRequest(request.clientId(), finalPrice)
 		);
 

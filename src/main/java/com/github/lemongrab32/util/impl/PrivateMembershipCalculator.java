@@ -30,9 +30,9 @@ public class PrivateMembershipCalculator extends MembershipCalculator {
 		if (months == 1) {
 			return basePrice;
 		} else if (months >= 3 && months <= 6) {
-			return basePrice - (basePrice * midMultiplier);
+			return months * (basePrice - basePrice * midMultiplier);
 		} else {
-			return basePrice - (basePrice * maxMultiplier);
+			return months * (basePrice - basePrice * maxMultiplier);
 		}
 	}
 

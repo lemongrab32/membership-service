@@ -98,8 +98,7 @@ public class MembershipServiceTest {
 			.tariffId(request.tariffId())
 			.build();
 
-		Mockito.when(paymentServiceClient.createPayment(Mockito.any()))
-			.thenReturn(new PaymentResponse(Status.SUCCESS, "Success", UUID.randomUUID()));
+		Mockito.doNothing().when(paymentServiceClient).createPayment(Mockito.any());
 		Mockito.when(membershipRepository.save(Mockito.any())).thenReturn(membership);
 
 		var response = membershipService.get(request);
