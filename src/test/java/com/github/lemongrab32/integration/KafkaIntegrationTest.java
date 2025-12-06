@@ -134,7 +134,7 @@ public class KafkaIntegrationTest {
 	}
 
 	@Test
-	@DisplayName("")
+	@DisplayName("Отправка уведомления в очередь")
 	public void publishNotification() {
 		Mockito.when(tariffService.getTariffById(tariff.getId())).thenReturn(tariff);
 		Mockito.when(membershipConfigRepository.getProperties())

@@ -81,7 +81,7 @@ public class MembershipServiceTest {
 	@DisplayName("Расчёт стоимости абонемента")
 	public void calculate() {
 		double basePrice = tariff.getBasePrice();
-		double expectedPrice = basePrice - (basePrice * 0.05);
+		double expectedPrice = request.months() * (basePrice - basePrice * 0.05);
 
 		var result = membershipService.calculate(request);
 
