@@ -21,6 +21,13 @@ public interface TariffService {
 	List<TariffRequest> getTariffs(Pageable pageable);
 
 	/**
+	 * Получение тарифа по его идентификатору
+	 * @param id идентификатор тарифа
+	 * @return искомый тариф
+	 */
+	Tariff getTariffById(Integer id);
+
+	/**
 	 * Сохранение нового тарифа
 	 * @param request данные добавляемого тарифа
 	 * @return dto с информацией о выполнении операции

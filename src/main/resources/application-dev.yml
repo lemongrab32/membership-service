@@ -11,3 +11,13 @@ spring:
       password: ${POSTGRES_PASSWORD}
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS}
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      username: ${REDIS_USER}
+      password: ${REDIS_USER_PASSWORD}
+
+client:
+  payment:
+    url: ${PAYMENT_CLIENT_URL}

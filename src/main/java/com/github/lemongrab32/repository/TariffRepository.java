@@ -1,16 +1,10 @@
 package com.github.lemongrab32.repository;
 
 import com.github.lemongrab32.model.Tariff;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface TariffRepository extends CrudRepository<Tariff, Integer> {
-
-	Page<Tariff> findAll(Pageable pageable);
-
-}
+public interface TariffRepository extends JpaRepository<Tariff, Integer>,
+	PagingAndSortingRepository<Tariff, Integer> {}
