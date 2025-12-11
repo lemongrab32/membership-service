@@ -70,7 +70,7 @@ public class TariffControllerTest {
 	@Test
 	@DisplayName("Запрос на добавление нового тарифа")
 	public void save() throws Exception {
-		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.SAVE_SUCCESS_MESSAGE, 1);
+		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.TARIFF_SAVE_SUCCESS_MESSAGE, 1);
 		String response = mapper.writeValueAsString(tariffResponse);
 
 		String request = mapper.writeValueAsString(tariffRequest);
@@ -90,7 +90,7 @@ public class TariffControllerTest {
 	@Test
 	@DisplayName("Запрос на обновление данных тарифа")
 	public void update() throws Exception {
-		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.UPDATE_SUCCESS_MESSAGE, 1);
+		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.TARIFF_UPDATE_SUCCESS_MESSAGE, 1);
 		String response = mapper.writeValueAsString(tariffResponse);
 
 		String request = mapper.writeValueAsString(tariffRequest);
@@ -110,7 +110,7 @@ public class TariffControllerTest {
 	@Test
 	@DisplayName("Запрос на удаление тарифа")
 	public void deleteTest() throws Exception {
-		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.DELETE_SUCCESS_MESSAGE, 1);
+		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.TARIFF_DELETE_SUCCESS_MESSAGE, 1);
 		String response = mapper.writeValueAsString(tariffResponse);
 
 		Mockito.when(tariffService.delete(1)).thenReturn(tariffResponse);

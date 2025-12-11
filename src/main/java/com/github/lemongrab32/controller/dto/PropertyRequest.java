@@ -1,4 +1,6 @@
 package com.github.lemongrab32.controller.dto;
 
-public record PropertyRequest(String name, Object value) {
+import jakarta.validation.constraints.NotNull;
+
+public record PropertyRequest(@NotNull String name, @NotNull Object value) {
 }

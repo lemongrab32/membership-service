@@ -6,7 +6,9 @@ import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import lombok.ToString;
 
 import java.util.UUID;
 
@@ -14,11 +16,14 @@ import java.util.UUID;
 public record MembershipRequest(
 	UUID clientId,
 
+	@NotNull
 	ClientCategory category,
 
+	@NotNull
 	ClientType type,
 
 	@Positive
+	@NotNull
 	Integer tariffId,
 
 	@Max(value = 12)

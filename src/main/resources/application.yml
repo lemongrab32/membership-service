@@ -1,3 +1,6 @@
 spring:
   application:
     name: membership-service
+
+  profiles:
+    default: dev

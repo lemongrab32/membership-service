@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -46,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties= {
 	"spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
 })
+@ActiveProfiles("test")
 public class KafkaIntegrationTest {
 
 	private static final KafkaContainer kafkaContainer =
@@ -81,7 +83,6 @@ public class KafkaIntegrationTest {
 		kafkaContainer.start();
 
 		registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
-		registry.add("client.payment.url", () -> "localhost:8083/payments");
 
 		AdminClient
 			.create(Collections.singletonMap(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaContainer.getBootstrapServers()))
@@ -142,7 +143,7 @@ public class KafkaIntegrationTest {
 		Mockito.doNothing().when(paymentServiceClient).createPayment(Mockito.any());
 		Mockito.when(membershipRepository.save(Mockito.any())).thenReturn(membership);
 
-		var response = membershipService.get(request);
+		var response = membershipService.getMembership(request);
 
 		assertNotNull(response);
 		assertEquals(request.tariffId(), response.tariffId());

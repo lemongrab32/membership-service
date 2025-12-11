@@ -11,7 +11,7 @@ endif
 build:
 	$(GRADLEW) clean build
 
-up: build
+up:
 	$(DOCKER_COMPOSE) up -d --build
 
 down:

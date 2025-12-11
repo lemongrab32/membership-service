@@ -78,7 +78,7 @@ public class TariffServiceTest {
 		var response = tariffService.save(request);
 
 		assertEquals(Status.SUCCESS, response.status());
-		assertEquals(Messages.SAVE_SUCCESS_MESSAGE, response.message());
+		assertEquals(Messages.TARIFF_SAVE_SUCCESS_MESSAGE, response.message());
 		assertEquals(tariff.getId(), response.tariffId());
 	}
 
@@ -95,7 +95,7 @@ public class TariffServiceTest {
 		var response = tariffService.update(tariff.getId(), request);
 
 		assertEquals(Status.SUCCESS, response.status());
-		assertEquals(Messages.UPDATE_SUCCESS_MESSAGE, response.message());
+		assertEquals(Messages.TARIFF_UPDATE_SUCCESS_MESSAGE, response.message());
 	}
 
 	@Test
@@ -106,7 +106,7 @@ public class TariffServiceTest {
 		var response = tariffService.delete(tariff.getId());
 
 		assertEquals(Status.SUCCESS, response.status());
-		assertEquals(Messages.DELETE_SUCCESS_MESSAGE, response.message());
+		assertEquals(Messages.TARIFF_DELETE_SUCCESS_MESSAGE, response.message());
 	}
 
 }
