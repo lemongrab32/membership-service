@@ -9,9 +9,15 @@ services:
     restart: unless-stopped
     ports:
       - ${MEMBERSHIP_SERVICE_PORT}:8080
-    env_file:
-      - path: ./default.env
-        required: true
+    environment:
+      POSTGRES_URL: ${POSTGRES_URL}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_USER: ${REDIS_USER}
+      REDIS_USER_PASSWORD: ${REDIS_USER_PASSWORD}
     networks:
       - gym-network
     depends_on:
@@ -27,13 +33,14 @@ services:
     image: postgres:18-alpine
     restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U user -d $POSTGRES_USER}" ]
+      test: [ "CMD-SHELL", "pg_isready -U user -d $POSTGRES_USER" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    env_file:
-      - path: ./default.env
-        required: true
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - ${POSTGRES_PORT}:5432
     networks:
@@ -42,9 +49,10 @@ services:
   redis:
     container_name: redis
     image: redis:8.4.0-alpine
-    env_file:
-      - path: ./default.env
-        required: true
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      REDIS_USER: ${REDIS_USER}
+      REDIS_USER_PASSWORD: ${REDIS_USER_PASSWORD}
     healthcheck:
       test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
     ports:
@@ -69,11 +77,19 @@ services:
   kafka:
     container_name: kafka
     image: apache/kafka:4.0.1
-    env_file:
-      - path: ./default.env
-        required: true
+    environment:
+      KAFKA_NODE_ID: ${KAFKA_NODE_ID}
+      KAFKA_PROCESS_ROLES: ${KAFKA_PROCESS_ROLES}
+      KAFKA_LISTENERS: ${KAFKA_LISTENERS}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_CONTROLLER_LISTENER_NAMES: ${KAFKA_CONTROLLER_LISTENER_NAMES}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+      KAFKA_CONTROLLER_QUORUM_VOTERS: ${KAFKA_CONTROLLER_QUORUM_VOTERS}
+      KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_BOOTSTRAP_SERVERS}
+    working_dir: /opt/kafka/bin
     healthcheck:
-      test: kafka-topics.sh --list --bootstrap-server localhost:9092 || exit -1
+      test: ./kafka-topics.sh --list --bootstrap-server localhost:9092 || exit -1
+      start_period: 10s
     ports:
       - ${KAFKA_PORT}:9092
     networks:

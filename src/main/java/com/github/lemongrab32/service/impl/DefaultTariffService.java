@@ -9,7 +9,6 @@ import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +34,7 @@ public class DefaultTariffService implements TariffService {
 	@Override
 	public Tariff getTariffById(Integer id) {
 		return repository.findById(id)
-			.orElseThrow(() -> new TariffNotFoundException("Tariff with id " + id + " not found"));
+			.orElseThrow(() -> new TariffNotFoundException(Messages.TARIFF_NOT_FOUND_MESSAGE, id));
 	}
 
 	@Override
@@ -49,13 +48,13 @@ public class DefaultTariffService implements TariffService {
 				.build()
 		);
 
-		return new TariffResponse(Status.SUCCESS, Messages.SAVE_SUCCESS_MESSAGE, saved.getId());
+		return new TariffResponse(Status.SUCCESS, Messages.TARIFF_SAVE_SUCCESS_MESSAGE, saved.getId());
 	}
 
 	@Override
 	public TariffResponse update(Integer tariffId, TariffRequest request) {
 		var tariff = repository.findById(tariffId)
-			.orElseThrow(() -> new TariffNotFoundException("Tariff with id " + tariffId + " not found"));
+			.orElseThrow(() -> new TariffNotFoundException(Messages.TARIFF_NOT_FOUND_MESSAGE, tariffId));
 
 		tariff.setName(request.name());
 		tariff.setBasePrice(request.basePrice());
@@ -64,17 +63,17 @@ public class DefaultTariffService implements TariffService {
 
 		repository.save(tariff);
 
-		return new TariffResponse(Status.SUCCESS, Messages.UPDATE_SUCCESS_MESSAGE, tariffId);
+		return new TariffResponse(Status.SUCCESS, Messages.TARIFF_UPDATE_SUCCESS_MESSAGE, tariffId);
 	}
 
 	@Override
 	public TariffResponse delete(Integer id) {
-		var deleted = repository.findById(id)
-			.orElseThrow(() -> new TariffNotFoundException("Tariff with id " + id + " not found"));
+		repository.findById(id)
+			.orElseThrow(() -> new TariffNotFoundException(Messages.TARIFF_NOT_FOUND_MESSAGE, id));
 
 		repository.deleteById(id);
 
-		return new TariffResponse(Status.SUCCESS, Messages.DELETE_SUCCESS_MESSAGE, id);
+		return new TariffResponse(Status.SUCCESS, Messages.TARIFF_DELETE_SUCCESS_MESSAGE, id);
 	}
 
 }

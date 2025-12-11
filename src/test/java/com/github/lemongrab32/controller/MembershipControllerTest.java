@@ -1,6 +1,5 @@
 package com.github.lemongrab32.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.lemongrab32.controller.dto.*;
 import com.github.lemongrab32.service.MembershipService;
@@ -66,7 +65,7 @@ public class MembershipControllerTest {
 
 		String json = mapper.writeValueAsString(membershipRequest);
 
-		Mockito.when(membershipService.calculate(membershipRequest))
+		Mockito.when(membershipService.calculateMembership(membershipRequest))
 			.thenReturn(response);
 
 		mockMvc.perform(post(urlPrefix + "/calculate")
@@ -88,7 +87,7 @@ public class MembershipControllerTest {
 
 		String json = mapper.writeValueAsString(membershipRequest);
 
-		Mockito.when(membershipService.get(membershipRequest))
+		Mockito.when(membershipService.getMembership(membershipRequest))
 			.thenReturn(response);
 
 		mockMvc.perform(post(urlPrefix)
@@ -124,17 +123,23 @@ public class MembershipControllerTest {
 			MembershipConfig.PRIVATE_MID_DISCOUNT, 0.07);
 		String valueStr = request.value().toString();
 
+		PropertyResponse response = new PropertyResponse(
+			Status.SUCCESS, Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE, valueStr
+		);
+		String responseJson = mapper.writeValueAsString(response);
+
 		String json = mapper.writeValueAsString(request);
 
 		Mockito.when(membershipService.setProperty(request))
-			.thenReturn(valueStr);
+			.thenReturn(response);
 
 		mockMvc.perform(put(urlPrefix + "/config")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(json)
 			)
 			.andExpect(status().isOk())
-			.andExpect(content().string(valueStr));
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(content().json(responseJson));
 	}
 
 }

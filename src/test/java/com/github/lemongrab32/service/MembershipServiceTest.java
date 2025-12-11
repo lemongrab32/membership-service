@@ -9,6 +9,7 @@ import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.MembershipConfigRepository;
 import com.github.lemongrab32.repository.MembershipRepository;
 import com.github.lemongrab32.service.impl.DefaultMembershipService;
+import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,11 +80,11 @@ public class MembershipServiceTest {
 
 	@Test
 	@DisplayName("Расчёт стоимости абонемента")
-	public void calculate() {
+	public void calculateMembership() {
 		double basePrice = tariff.getBasePrice();
 		double expectedPrice = request.months() * (basePrice - basePrice * 0.05);
 
-		var result = membershipService.calculate(request);
+		var result = membershipService.calculateMembership(request);
 
 		assertNotNull(result);
 		assertEquals(expectedPrice, result.finalPrice());
@@ -91,7 +92,7 @@ public class MembershipServiceTest {
 
 	@Test
 	@DisplayName("Оформление абонемента")
-	public void getMembership() {
+	public void getMembershipMembership() {
 		final Membership membership = Membership.builder()
 			.id(1L)
 			.clientId(request.clientId())
@@ -101,7 +102,7 @@ public class MembershipServiceTest {
 		Mockito.doNothing().when(paymentServiceClient).createPayment(Mockito.any());
 		Mockito.when(membershipRepository.save(Mockito.any())).thenReturn(membership);
 
-		var response = membershipService.get(request);
+		var response = membershipService.getMembership(request);
 
 		assertNotNull(response);
 		assertEquals(membership.getTariffId(), response.tariffId());
@@ -109,7 +110,7 @@ public class MembershipServiceTest {
 
 	@Test
 	@DisplayName("Получение списка параметров")
-	public void getProperties() {
+	public void getMembershipProperties() {
 		Mockito.when(membershipConfigRepository.getProperties())
 			.thenReturn(Collections.emptyMap());
 
@@ -124,13 +125,17 @@ public class MembershipServiceTest {
 	public void setProperty() {
 		var propertyRequest = new PropertyRequest("testProperty", "testValue");
 
+		var response = new PropertyResponse(
+			Status.SUCCESS, Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE, "str"
+		);
+
 		Mockito.when(membershipConfigRepository.setProperty(Mockito.any()))
-			.thenReturn("str");
+			.thenReturn(response.name());
 
-		var response = membershipService.setProperty(propertyRequest);
+		var received = membershipService.setProperty(propertyRequest);
 
-		assertNotNull(response);
-		assertEquals("str", response);
+		assertNotNull(received);
+		assertEquals(received, response);
 	}
 
 }

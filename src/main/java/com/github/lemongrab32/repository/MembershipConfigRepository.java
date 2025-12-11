@@ -3,11 +3,11 @@ package com.github.lemongrab32.repository;
 import com.github.lemongrab32.controller.dto.PropertyRequest;
 import com.github.lemongrab32.exception.UnknownPropertyException;
 import com.github.lemongrab32.type.MembershipConfig;
+import com.github.lemongrab32.type.Messages;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +29,7 @@ public class MembershipConfigRepository {
 
 	public String setProperty(PropertyRequest request) {
 		if (!properties.containsKey(request.name())) {
-			throw new UnknownPropertyException("Property " + request.name() + " does not exist");
+			throw new UnknownPropertyException(Messages.UNKNOWN_PROPERTY_MESSAGE, request.name());
 		}
 
 		properties.put(request.name(), request.value());

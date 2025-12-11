@@ -1,0 +1,53 @@
+@startuml
+package "controller" {
+    [TariffController]
+    [MembershipController]
+    package "dto" {
+        [CalculationResponse]
+        [MembershipRequest]
+        [MembershipResponse]
+        [NotificationRequest]
+        [PaymentRequest]
+        [PaymentResponse]
+        [PropertyRequest]
+        [TariffRequest]
+        [TariffResponse]
+    }
+}
+
+package "service" {
+    [MembershipService]
+    [TariffService]
+    package "impl" {
+        [DefaultMembershipService]
+        [DefaultTariffService]
+    }
+}
+
+package "model" {
+    [ClientCategory]
+    [ClientType]
+    [Membership]
+    [Tariff]
+}
+
+package "repository" {
+    [MembershipConfigRepository]
+    [MembershipRepository]
+    [TariffRepository]
+}
+
+package "util" {
+    [MembershipCalculator]
+    package "impl" {
+        [EnterpriseMembershipCalculator]
+        [PrivateMembershipCalculator]
+    }
+}
+
+controller --> service
+service --> repository
+repository --> model
+service --> util
+util --> model
+@enduml

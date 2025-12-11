@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,17 +25,21 @@ public class TariffController {
 	private final TariffService tariffService;
 
 	@GetMapping
-	public ResponseEntity<List<TariffRequest>> getTariffs(@RequestParam("offset") int offset, @RequestParam("limit") int limit) {
+	public ResponseEntity<List<TariffRequest>> getTariffs(
+		@RequestParam("offset") int offset, @RequestParam("limit") int limit
+	) {
 		return ResponseEntity.ok(tariffService.getTariffs(PageRequest.of(offset, limit)));
 	}
 
 	@PostMapping
-	public ResponseEntity<TariffResponse> createTariff(@RequestBody TariffRequest request) {
+	public ResponseEntity<TariffResponse> createTariff(@RequestBody @Validated TariffRequest request) {
 		return new ResponseEntity<>(tariffService.save(request), HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<TariffResponse> updateTariff(@PathVariable Integer id, @RequestBody TariffRequest request) {
+	public ResponseEntity<TariffResponse> updateTariff(
+		@PathVariable Integer id, @RequestBody @Validated TariffRequest request
+	) {
 		return ResponseEntity.ok(tariffService.update(id, request));
 	}
 

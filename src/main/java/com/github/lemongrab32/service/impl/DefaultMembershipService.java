@@ -28,18 +28,18 @@ public class DefaultMembershipService implements MembershipService {
 	private final MembershipRepository membershipRepository;
 	private final MembershipConfigRepository membershipConfigRepository;
 	private final TariffService tariffService;
-	private final PaymentServiceClient paymentServiceClient;
+	private final PaymentServiceClient paymentServiceClient = new PaymentServiceClient();
 	private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
 	@Override
 	@Cacheable(value = "CALC_CACHE", key = "#request.category().toString() + " +
 		"#request.type().toString() + #request.donation() + #request.months() + " +
 		"#request.hours() + #request.tariffId()")
-	public CalculationResponse calculate(MembershipRequest request) {
+	public CalculationResponse calculateMembership(MembershipRequest request) {
 		Tariff tariff = tariffService.getTariffById(request.tariffId());
 
 		if (!tariff.getClientCategory().equals(request.category()) || !tariff.getClientType().equals(request.type())) {
-			throw new InvalidClientOptionsException("Invalid client request");
+			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
 		}
 
 		var props = getProperties();
@@ -53,8 +53,8 @@ public class DefaultMembershipService implements MembershipService {
 
 	@Override
 	@Transactional
-	public MembershipResponse get(MembershipRequest request) {
-		var calcResponse = calculate(request);
+	public MembershipResponse getMembership(MembershipRequest request) {
+		var calcResponse = calculateMembership(request);
 		double finalPrice = calcResponse.finalPrice();
 
 		paymentServiceClient.createPayment(
@@ -101,8 +101,12 @@ public class DefaultMembershipService implements MembershipService {
 	}
 
 	@Override
-	public String setProperty(PropertyRequest request) {
-		return membershipConfigRepository.setProperty(request);
+	public PropertyResponse setProperty(PropertyRequest request) {
+		return new PropertyResponse(
+			Status.SUCCESS,
+			Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE,
+			membershipConfigRepository.setProperty(request)
+		);
 	}
 
 }

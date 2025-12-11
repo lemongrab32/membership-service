@@ -1,0 +1,18 @@
+@startuml
+actor User as "Пользователь"
+actor Admin as "Администратор"
+
+rectangle "Система" {
+  (CalculateMembershipCost) as UC1
+  (ConfigurePricingRules) as UC2
+  (ManageTariffs) as UC3
+}
+
+User --> UC1
+Admin --> UC2
+Admin --> UC3
+
+UC1 --> (MembershipCalculator)
+UC2 --> (MembershipConfigRepository)
+UC3 --> (TariffRepository)
+@enduml

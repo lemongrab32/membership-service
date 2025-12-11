@@ -22,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
@@ -38,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(properties= {
 	"spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration"
 })
+@ActiveProfiles("test")
 public class RedisIntegrationTest {
 
 	private static final String redisUsername = "membership-service-user";
@@ -80,7 +82,6 @@ public class RedisIntegrationTest {
 		registry.add("spring.data.redis.port", redisContainer::getFirstMappedPort);
 		registry.add("spring.data.redis.user", () -> redisUsername);
 		registry.add("spring.data.redis.password", () -> redisPassword);
-		registry.add("client.payment.url", () -> "localhost:8083/payments");
 	}
 
 	@BeforeEach
@@ -114,8 +115,8 @@ public class RedisIntegrationTest {
 		Mockito.when(membershipConfigRepository.getProperties())
 			.thenReturn(props);
 
-		membershipService.calculate(request);
-		CalculationResponse response = membershipService.calculate(request);
+		membershipService.calculateMembership(request);
+		CalculationResponse response = membershipService.calculateMembership(request);
 		String key = request.category().toString() +
 			request.type().toString() +
 			request.donation() +

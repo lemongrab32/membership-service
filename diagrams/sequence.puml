@@ -1,0 +1,24 @@
+@startuml
+actor "Клиент" as Client
+participant "Membership Service" as Service
+database "PostgreSQL" as Database
+participant "Payment Service" as PaymentService
+queue "Apache Kafka" as Kafka
+
+== Рассчитать итоговую стоимость абонемента ==
+Client -> Service: POST /api/v1/memberships/calculate\n{client_category, client_type, months, hours, donation, tariff_id}
+Service -> Database: Получить данные тарифа по идентификатору
+Database --> Service: Запрашиваемый тариф
+Service -> Client: 200 OK, рассчитанная стоимость с учётом данных пользователя и тарифа
+
+== Оформление абонемента ==
+Client -> Service: POST /api/v1/memberships\n{client_id, client_category, client_type, months, hours, donation, tariff_id}
+Service -> Database: Получить данные тарифа по идентификатору
+Database --> Service: Запрашиваемый тариф
+Service -> Service: Расчёт итоговой стоимости абонемента
+Service -> PaymentService: POST /api/v1/payments\n{client_id, final_price}
+PaymentService --> Service: Результат проведение оплаты
+Service -> Kafka: Уведомление\n{final_price, membership_id, start_date, end_date, hours_remaining}
+Service -> Client: 200 OK, {status, message, tariff_id}
+
+@enduml

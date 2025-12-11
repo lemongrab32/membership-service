@@ -1,6 +1,7 @@
 spring:
   liquibase:
     enabled: true
+    drop-first: true
     url: ${POSTGRES_URL}
     user: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
@@ -17,7 +18,3 @@ spring:
       port: ${REDIS_PORT}
       username: ${REDIS_USER}
       password: ${REDIS_USER_PASSWORD}
-
-client:
-  payment:
-    url: ${PAYMENT_CLIENT_URL}
