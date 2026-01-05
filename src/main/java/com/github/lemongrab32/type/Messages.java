@@ -14,4 +14,9 @@ public class Messages {
 	public final static String PROPERTY_UPDATE_SUCCESS_MESSAGE = "Значение параметра успешно обновлено";
 	public final static String UNKNOWN_PROPERTY_MESSAGE = "Неизвестный параметр";
 
+	public final static String VALIDATION_NOT_NULL_MESSAGE = "Отсутствует значение поля";
+	public final static String VALIDATION_POSITIVE_MESSAGE = "Значение поля должно быть > 0";
+	public final static String VALIDATION_TYPE_INCORRECT_MESSAGE = "Указан несуществующий или пустой тип";
+	public final static String VALIDATION_CATEGORY_INCORRECT_MESSAGE = "Указана несуществующая или пустая категория";
+
 }
