@@ -26,7 +26,8 @@ public class TariffController {
 
 	@GetMapping
 	public ResponseEntity<List<TariffRequest>> getTariffs(
-		@RequestParam("offset") int offset, @RequestParam("limit") int limit
+		@RequestParam(name = "offset", defaultValue = "0") int offset,
+		@RequestParam(name = "limit", defaultValue = "10") int limit
 	) {
 		return ResponseEntity.ok(tariffService.getTariffs(PageRequest.of(offset, limit)));
 	}

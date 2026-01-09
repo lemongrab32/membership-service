@@ -27,8 +27,8 @@ public class PrivateMembershipCalculator extends MembershipCalculator {
 	private double calcMonthly(MembershipRequest request, Double basePrice) {
 		int months = request.months();
 
-		if (months == 1) {
-			return basePrice;
+		if (months >= 1 && months < 3) {
+			return months * basePrice;
 		} else if (months >= 3 && months <= 6) {
 			return months * (basePrice - basePrice * midMultiplier);
 		} else {

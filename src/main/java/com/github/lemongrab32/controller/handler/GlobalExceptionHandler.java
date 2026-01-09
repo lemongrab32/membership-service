@@ -46,7 +46,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(InvalidClientOptionsException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public CalculationResponse handleInvalidClientOptionsException(InvalidClientOptionsException ex) {
-		return new CalculationResponse(Status.ERROR, ex.getMessage(), 0.0);
+		return new CalculationResponse(Status.ERROR, ex.getMessage(), null);
 	}
 
 	@ExceptionHandler(TariffNotFoundException.class)

@@ -13,6 +13,7 @@ import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
 import com.github.lemongrab32.util.MembershipCalculator;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -57,9 +58,13 @@ public class DefaultMembershipService implements MembershipService {
 		var calcResponse = calculateMembership(request);
 		double finalPrice = calcResponse.finalPrice();
 
-		paymentServiceClient.createPayment(
-			new PaymentRequest(request.clientId(), finalPrice)
-		);
+		if (request.clientId() != null) {
+			paymentServiceClient.createPayment(
+				new PaymentRequest(request.clientId(), finalPrice)
+			);
+		} else {
+			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
+		}
 
 		LocalDate startDate = LocalDate.now();
 		var membership = Membership.builder()
