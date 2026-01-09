@@ -5,6 +5,7 @@ import com.github.lemongrab32.controller.dto.TariffRequest;
 import com.github.lemongrab32.controller.dto.TariffResponse;
 import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.TariffRepository;
+import com.github.lemongrab32.service.MembershipService;
 import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
@@ -14,6 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Стандартная реализация сервиса {@link TariffService}
+ */
 @Service
 @RequiredArgsConstructor
 public class DefaultTariffService implements TariffService {

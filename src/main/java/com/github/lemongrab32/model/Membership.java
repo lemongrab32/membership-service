@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * Сущность абонемента
+ */
 @Getter
 @Setter
 @NoArgsConstructor

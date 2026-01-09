@@ -11,6 +11,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+/**
+ * DTO запроса на добавление нового или обновление существующего тарифа
+ * @param name наименование тарифа
+ * @param basePrice базовая стоимость 1 месяца занятий по тарифу
+ * @param category возрастная категория клиента
+ * @param type тип клиента
+ */
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record TariffRequest(
 	@Size(min = 2, max = 100, message = "Количество символов в имени должно быть от 2 до 100")

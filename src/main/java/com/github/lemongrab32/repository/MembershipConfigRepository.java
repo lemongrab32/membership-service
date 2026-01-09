@@ -11,12 +11,18 @@ import org.springframework.stereotype.Repository;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * In-memory репозиторий для хранения параметров для расчёта стоимости абонементов
+ */
 @Getter
 @Repository
 public class MembershipConfigRepository {
 
 	private final Map<String, Object> properties = new ConcurrentHashMap<>();
 
+	/**
+	 * Инициализация стандартных значений параметров
+	 */
 	@PostConstruct
 	public void init() {
 		properties.put(MembershipConfig.PRIVATE_MID_DISCOUNT, 0.05);
@@ -28,6 +34,11 @@ public class MembershipConfigRepository {
 		properties.put(MembershipConfig.ENTERPRISE_DONATION_BOUND_TOP, 50000);
 	}
 
+	/**
+	 * Изменение значения параметра
+	 * @param request {@link PropertyRequest} тело запроса
+	 * @return имя обновлённого параметра
+	 */
 	public String setProperty(PropertyRequest request) {
 		if (!properties.containsKey(request.name())) {
 			throw new UnknownPropertyException(Messages.UNKNOWN_PROPERTY_MESSAGE, request.name());

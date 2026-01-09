@@ -24,6 +24,12 @@ public class TariffController {
 
 	private final TariffService tariffService;
 
+	/**
+	 * Обработка запросов на получения списка тарифов с пагинацией
+	 * @param offset номер страницы списка
+	 * @param limit количество элементов на странице
+	 * @return список тарифов по указанным параметрам пагинации
+	 */
 	@GetMapping
 	public ResponseEntity<List<TariffRequest>> getTariffs(
 		@RequestParam(name = "offset", defaultValue = "0") int offset,
@@ -32,11 +38,22 @@ public class TariffController {
 		return ResponseEntity.ok(tariffService.getTariffs(PageRequest.of(offset, limit)));
 	}
 
+	/**
+	 * Обработка запросов на добавление нового тарифа
+	 * @param request {@link TariffRequest} тело запроса
+	 * @return {@link TariffResponse} с кодом ответа 201
+	 */
 	@PostMapping
 	public ResponseEntity<TariffResponse> createTariff(@RequestBody @Validated TariffRequest request) {
 		return new ResponseEntity<>(tariffService.save(request), HttpStatus.CREATED);
 	}
 
+	/**
+	 * Обработка запросов на обновление тарифа
+	 * @param id идентификатор обновляемого тарифа
+	 * @param request {@link TariffRequest} тело запроса
+	 * @return {@link TariffResponse} с кодом ответа 200
+	 */
 	@PutMapping("/{id}")
 	public ResponseEntity<TariffResponse> updateTariff(
 		@PathVariable Integer id, @RequestBody @Validated TariffRequest request
@@ -44,6 +61,11 @@ public class TariffController {
 		return ResponseEntity.ok(tariffService.update(id, request));
 	}
 
+	/**
+	 * Обработка запросов на удаление тарифа
+	 * @param id идентификатор обновляемого тарифа
+	 * @return {@link TariffResponse} с кодом ответа 200
+	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<TariffResponse> deleteTariff(@PathVariable Integer id) {
 		return ResponseEntity.ok(tariffService.delete(id));

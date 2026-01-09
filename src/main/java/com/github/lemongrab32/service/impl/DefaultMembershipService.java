@@ -22,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Стандартная реализация сервиса {@link MembershipService}
+ */
 @Service
 @RequiredArgsConstructor
 public class DefaultMembershipService implements MembershipService {
@@ -39,12 +42,13 @@ public class DefaultMembershipService implements MembershipService {
 	public CalculationResponse calculateMembership(MembershipRequest request) {
 		Tariff tariff = tariffService.getTariffById(request.tariffId());
 
-		if (!tariff.getClientCategory().equals(request.category()) || !tariff.getClientType().equals(request.type())) {
+		if (!tariff.getClientCategory().equals(request.category()) ||                              // категория или тип клиента не соответствуют данным тарифа
+			!tariff.getClientType().equals(request.type())) {
 			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
 		}
 
-		var props = getProperties();
-		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type(), props);
+		var props = getProperties(); // получение параметров для расчёта
+		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type(), props); // вызов фабричного метода для получения калькулятора на основании типа клиента
 
 		return new CalculationResponse(
 			Status.SUCCESS, Messages.CALCULATION_SUCCESS_MESSAGE,
@@ -55,12 +59,12 @@ public class DefaultMembershipService implements MembershipService {
 	@Override
 	@Transactional
 	public MembershipResponse getMembership(MembershipRequest request) {
-		var calcResponse = calculateMembership(request);
+		var calcResponse = calculateMembership(request);                                           // расчёт стоимости абонемента
 		double finalPrice = calcResponse.finalPrice();
 
 		if (request.clientId() != null) {
 			paymentServiceClient.createPayment(
-				new PaymentRequest(request.clientId(), finalPrice)
+				new PaymentRequest(request.clientId(), finalPrice)                                 // отправка запроса в платёжный сервис
 			);
 		} else {
 			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
@@ -82,9 +86,9 @@ public class DefaultMembershipService implements MembershipService {
 
 		var saved = membershipRepository.save(membership);
 
-		kafkaTemplate.send(
-			"notifications",
-			new NotificationRequest(
+		kafkaTemplate.send(                                                                        // отправка данных об оформленном
+			"notifications",                                                                       // абонементе в очередь сообщений для последующего
+			new NotificationRequest(                                                               // формирования уведомления клиенту
 				saved.getFinalPrice(),
 				saved.getId(),
 				saved.getStartDate(),

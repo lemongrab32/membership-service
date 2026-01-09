@@ -18,9 +18,17 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 
 import java.util.stream.Collectors;
 
+/**
+ * Обработчик ошибок контроллеров для отправки корректных ответов
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	/**
+	 * Обработка ошибок валидации
+	 * @param ex тело ошибки
+	 * @return список полей и соответствующих им ошибок валидации
+	 */
 	@ExceptionHandler(WebExchangeBindException.class)
 	public ResponseEntity<?> handleWebExchangeBindException(WebExchangeBindException ex) {
 		var map = ex.getFieldErrors().stream()
@@ -32,6 +40,11 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(map);
 	}
 
+	/**
+	 * Обработка ошибок валидации
+	 * @param ex тело ошибки
+	 * @return список полей и соответствующих им ошибок валидации с кодом ответа 400
+	 */
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
 		var map = ex.getFieldErrors().stream()
@@ -43,18 +56,33 @@ public class GlobalExceptionHandler {
 		return ResponseEntity.badRequest().body(map);
 	}
 
+	/**
+	 * Обработка ошибок, связанных с некорректными данными клиента
+	 * @param ex тело ошибки
+	 * @return {@link CalculationResponse} с текстом ошибки и кодом ответа 400
+	 */
 	@ExceptionHandler(InvalidClientOptionsException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public CalculationResponse handleInvalidClientOptionsException(InvalidClientOptionsException ex) {
 		return new CalculationResponse(Status.ERROR, ex.getMessage(), null);
 	}
 
+	/**
+	 * Обработка ошибок, связанных с отсутствием искомого тарифа или с указанием некорректного идентификатора
+	 * @param ex тело ошибки
+	 * @return {@link TariffResponse} с текстом ошибки и кодом ответа 400
+	 */
 	@ExceptionHandler(TariffNotFoundException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public TariffResponse handleTariffNotFoundException(TariffNotFoundException ex) {
 		return new TariffResponse(Status.ERROR, ex.getMessage(), ex.getTariffId());
 	}
 
+	/**
+	 * Обработка ошибок, связанных с указанием некорректного наименования параметра
+	 * @param ex тело ошибки
+	 * @return {@link PropertyResponse} с текстом ошибки и кодом ответа 400
+	 */
 	@ExceptionHandler(UnknownPropertyException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public PropertyResponse handleUnknownPropertyException(UnknownPropertyException ex) {

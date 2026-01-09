@@ -8,8 +8,17 @@ import com.github.lemongrab32.util.impl.PrivateMembershipCalculator;
 
 import java.util.Map;
 
+/**
+ * Абстрактное определение калькулятора для расчёта стоимости абонемента
+ */
 public abstract class MembershipCalculator {
 
+	/**
+	 * Фабричный метод для получения нужного калькулятора в зависимости от типа клиента
+	 * @param type тип клиента
+	 * @param props список параметров для расчёта
+	 * @return калькулятор для указанного типа клиента
+	 */
 	public static MembershipCalculator getInstance(ClientType type, Map<String, Object> props) {
 		switch (type) {
 			case PRIVATE -> {
@@ -33,6 +42,12 @@ public abstract class MembershipCalculator {
 		}
 	}
 
+	/**
+	 * Расчёт стоимости абонемента
+	 * @param request {@link MembershipRequest} тело запроса
+	 * @param basePrice базовая стоимость 1 месяца занятий по тарифу
+	 * @return рассчитанная стоимость абонемента
+	 */
 	abstract public double calculate(MembershipRequest request, Double basePrice);
 
 }

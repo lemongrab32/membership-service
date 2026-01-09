@@ -11,10 +11,19 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.ToString;
 
 import java.util.UUID;
 
+/**
+ * DTO запроса на расчёт стоимости абонемента или его оформления
+ * @param clientId идентификатор клиента
+ * @param category возрастная категория клиента
+ * @param type тип клиента
+ * @param tariffId идентификатор тарифа, по которому оформляется абонемент
+ * @param months срок действия оформляемого абонемента в месяцах
+ * @param hours количество часов для абонемента с почасовой оплатой (частные клиенты)
+ * @param donation сумма пожертвований компании (корпоративные клиенты)
+ */
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record MembershipRequest(
 	UUID clientId,

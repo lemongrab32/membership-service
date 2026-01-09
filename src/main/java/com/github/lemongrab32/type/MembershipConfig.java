@@ -1,5 +1,8 @@
 package com.github.lemongrab32.type;
 
+/**
+ * Класс, содержащий названия всех параметров расчёта абонементов
+ */
 public class MembershipConfig {
 
 	public final static String PRIVATE_HOUR_MULTIPLIER = "client.private.hour-multiplier";

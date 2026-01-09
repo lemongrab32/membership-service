@@ -1,5 +1,8 @@
 package com.github.lemongrab32.type;
 
+/**
+ * Класс, содержащий сообщения для ответов пользователю
+ */
 public class Messages {
 
 	public final static String TARIFF_SAVE_SUCCESS_MESSAGE = "Тариф успешно сохранён";
