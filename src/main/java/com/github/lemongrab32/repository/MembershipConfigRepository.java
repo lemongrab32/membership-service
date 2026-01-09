@@ -21,6 +21,7 @@ public class MembershipConfigRepository {
 	public void init() {
 		properties.put(MembershipConfig.PRIVATE_MID_DISCOUNT, 0.05);
 		properties.put(MembershipConfig.PRIVATE_MAX_DISCOUNT, 0.1);
+		properties.put(MembershipConfig.PRIVATE_HOUR_MULTIPLIER, 0.15);
 		properties.put(MembershipConfig.ENTERPRISE_MID_DISCOUNT, 0.05);
 		properties.put(MembershipConfig.ENTERPRISE_MAX_DISCOUNT, 0.1);
 		properties.put(MembershipConfig.ENTERPRISE_DONATION_BOUND_BOTTOM, 10000);

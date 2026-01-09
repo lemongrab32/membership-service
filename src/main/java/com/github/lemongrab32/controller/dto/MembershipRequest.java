@@ -41,7 +41,8 @@ public record MembershipRequest(
 	@Min(value = 1, message = "Значение поля должно быть >= 1")
 	Integer months,
 
-	@Positive(message = Messages.VALIDATION_POSITIVE_MESSAGE)
+	@Min(value = 1, message = "Значение поля должно быть >= 1")
+	@Max(value = 8, message = "Значение поля должно быть <= 8")
 	Integer hours,
 
 	@Positive(message = Messages.VALIDATION_POSITIVE_MESSAGE)

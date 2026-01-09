@@ -21,7 +21,7 @@ public class PrivateMembershipCalculator extends MembershipCalculator {
 	}
 
 	private double calcHourly(MembershipRequest request, Double basePrice) {
-		return request.hours() * (basePrice + (basePrice * hourMultiplier) / 84);
+		return request.hours() * (basePrice * hourMultiplier);
 	}
 
 	private double calcMonthly(MembershipRequest request, Double basePrice) {
