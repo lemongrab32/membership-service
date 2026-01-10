@@ -7,5 +7,11 @@ import com.github.lemongrab32.type.Status;
 
 import java.util.UUID;
 
+/**
+ * DTO ответа от платёжного сервиса
+ * @param status статус проведения платежа
+ * @param message уточняющее сообщение
+ * @param paymentId идентификатор платежа
+ */
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record PaymentResponse(Status status, String message, UUID paymentId) {}
+public record PaymentResponse(String status, String message, UUID paymentId) {}

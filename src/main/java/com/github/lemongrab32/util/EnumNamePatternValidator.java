@@ -8,6 +8,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * Реализация валидации полей перечислений
+ */
 public class EnumNamePatternValidator implements ConstraintValidator<EnumNamePattern, Enum<?>> {
 
 	public static final String CATEGORY_PATTERN = "CHILD|STUDENT|ADULT";
@@ -18,9 +21,9 @@ public class EnumNamePatternValidator implements ConstraintValidator<EnumNamePat
 	@Override
 	public void initialize(EnumNamePattern annotation) {
 		try {
-			pattern = Pattern.compile(annotation.regexp());
+			pattern = Pattern.compile(annotation.regexp()); // инициализация шаблона для обработки регулярного выражения
 		} catch (PatternSyntaxException e) {
-			throw new IllegalArgumentException("Given regex is invalid", e);
+			throw new IllegalArgumentException("Некорректное регулярное выражение", e);
 		}
 	}
 

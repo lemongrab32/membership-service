@@ -8,10 +8,12 @@ import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.MembershipConfigRepository;
 import com.github.lemongrab32.repository.MembershipRepository;
 import com.github.lemongrab32.service.MembershipService;
+import com.github.lemongrab32.service.PropertyService;
 import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
 import com.github.lemongrab32.util.MembershipCalculator;
+import com.github.lemongrab32.util.mapper.MembershipMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.cache.annotation.Cacheable;
@@ -22,6 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * Стандартная реализация сервиса {@link MembershipService}
+ */
 @Service
 @RequiredArgsConstructor
 public class DefaultMembershipService implements MembershipService {
@@ -29,8 +34,10 @@ public class DefaultMembershipService implements MembershipService {
 	private final MembershipRepository membershipRepository;
 	private final MembershipConfigRepository membershipConfigRepository;
 	private final TariffService tariffService;
+	private final PropertyService propertyService;
 	private final PaymentServiceClient paymentServiceClient = new PaymentServiceClient();
 	private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
+	private final MembershipMapper mapper;
 
 	@Override
 	@Cacheable(value = "CALC_CACHE", key = "#request.category().toString() + " +
@@ -39,12 +46,13 @@ public class DefaultMembershipService implements MembershipService {
 	public CalculationResponse calculateMembership(MembershipRequest request) {
 		Tariff tariff = tariffService.getTariffById(request.tariffId());
 
-		if (!tariff.getClientCategory().equals(request.category()) || !tariff.getClientType().equals(request.type())) {
+		if (!tariff.getClientCategory().equals(request.category()) ||                              // категория или тип клиента не соответствуют данным тарифа
+			!tariff.getClientType().equals(request.type())) {
 			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
 		}
 
-		var props = getProperties();
-		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type(), props);
+		var props = propertyService.getProperties(); // получение параметров для расчёта
+		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type(), props); // вызов фабричного метода для получения калькулятора на основании типа клиента
 
 		return new CalculationResponse(
 			Status.SUCCESS, Messages.CALCULATION_SUCCESS_MESSAGE,
@@ -55,25 +63,19 @@ public class DefaultMembershipService implements MembershipService {
 	@Override
 	@Transactional
 	public MembershipResponse getMembership(MembershipRequest request) {
-		var calcResponse = calculateMembership(request);
+		var calcResponse = calculateMembership(request);                                           // расчёт стоимости абонемента
 		double finalPrice = calcResponse.finalPrice();
 
 		if (request.clientId() != null) {
 			paymentServiceClient.createPayment(
-				new PaymentRequest(request.clientId(), finalPrice)
+				new PaymentRequest(request.clientId(), finalPrice)                                 // отправка запроса в платёжный сервис
 			);
 		} else {
 			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
 		}
 
 		LocalDate startDate = LocalDate.now();
-		var membership = Membership.builder()
-			.clientId(request.clientId())
-			.startDate(startDate)
-			.isActive(true)
-			.finalPrice(finalPrice)
-			.tariffId(request.tariffId())
-			.build();
+		var membership = mapper.toMembership(request);
 		if (request.hours() == null) {
 			membership.setEndDate(startDate.plusMonths(request.months()));
 		} else {
@@ -82,9 +84,9 @@ public class DefaultMembershipService implements MembershipService {
 
 		var saved = membershipRepository.save(membership);
 
-		kafkaTemplate.send(
-			"notifications",
-			new NotificationRequest(
+		kafkaTemplate.send(                                                                        // отправка данных об оформленном
+			"notifications",                                                                       // абонементе в очередь сообщений для последующего
+			new NotificationRequest(                                                               // формирования уведомления клиенту
 				saved.getFinalPrice(),
 				saved.getId(),
 				saved.getStartDate(),
@@ -97,20 +99,6 @@ public class DefaultMembershipService implements MembershipService {
 			Status.SUCCESS,
 			Messages.MEMBERSHIP_SUCCESS_MESSAGE,
 			request.tariffId()
-		);
-	}
-
-	@Override
-	public Map<String, Object> getProperties() {
-		return membershipConfigRepository.getProperties();
-	}
-
-	@Override
-	public PropertyResponse setProperty(PropertyRequest request) {
-		return new PropertyResponse(
-			Status.SUCCESS,
-			Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE,
-			membershipConfigRepository.setProperty(request)
 		);
 	}
 

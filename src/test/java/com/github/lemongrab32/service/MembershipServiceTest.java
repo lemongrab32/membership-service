@@ -9,8 +9,10 @@ import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.MembershipConfigRepository;
 import com.github.lemongrab32.repository.MembershipRepository;
 import com.github.lemongrab32.service.impl.DefaultMembershipService;
+import com.github.lemongrab32.service.impl.DefaultPropertyService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
+import com.github.lemongrab32.util.mapper.MembershipMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,13 +34,16 @@ public class MembershipServiceTest {
 	private MembershipRepository membershipRepository;
 
 	@Mock
-	private MembershipConfigRepository membershipConfigRepository;
-
-	@Mock
 	private TariffService tariffService;
 
 	@Mock
 	private PaymentServiceClient paymentServiceClient;
+
+	@Mock
+	private PropertyService propertyService;
+
+	@Mock
+	private MembershipMapper mapper;
 
 	@Mock
 	private KafkaTemplate<String, NotificationRequest> kafkaTemplate;
@@ -71,6 +76,10 @@ public class MembershipServiceTest {
 		closeable = MockitoAnnotations.openMocks(this);
 
 		Mockito.when(tariffService.getTariffById(request.tariffId())).thenReturn(tariff);
+
+		var propRepo = new MembershipConfigRepository();
+		propRepo.init();
+		Mockito.when(propertyService.getProperties()).thenReturn(propRepo.getProperties());
 	}
 
 	@AfterEach
@@ -101,41 +110,12 @@ public class MembershipServiceTest {
 
 		Mockito.doNothing().when(paymentServiceClient).createPayment(Mockito.any());
 		Mockito.when(membershipRepository.save(Mockito.any())).thenReturn(membership);
+		Mockito.when(mapper.toMembership(request)).thenReturn(membership);
 
 		var response = membershipService.getMembership(request);
 
 		assertNotNull(response);
 		assertEquals(membership.getTariffId(), response.tariffId());
-	}
-
-	@Test
-	@DisplayName("Получение списка параметров")
-	public void getMembershipProperties() {
-		Mockito.when(membershipConfigRepository.getProperties())
-			.thenReturn(Collections.emptyMap());
-
-		var response = membershipService.getProperties();
-
-		assertNotNull(response);
-		assertTrue(response.isEmpty());
-	}
-
-	@Test
-	@DisplayName("Задание значения параметру")
-	public void setProperty() {
-		var propertyRequest = new PropertyRequest("testProperty", "testValue");
-
-		var response = new PropertyResponse(
-			Status.SUCCESS, Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE, "str"
-		);
-
-		Mockito.when(membershipConfigRepository.setProperty(Mockito.any()))
-			.thenReturn(response.name());
-
-		var received = membershipService.setProperty(propertyRequest);
-
-		assertNotNull(received);
-		assertEquals(received, response);
 	}
 
 }

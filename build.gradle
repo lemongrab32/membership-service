@@ -8,7 +8,7 @@ ext {
 }
 
 group = 'com.github.lemongrab32'
-version = '0.3.6-SNAPSHOT'
+version = '0.3.11-SNAPSHOT'
 description = 'membership-service'
 
 java {
@@ -45,6 +45,9 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'

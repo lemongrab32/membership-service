@@ -1,9 +1,8 @@
 package com.github.lemongrab32.service;
 
-import com.github.lemongrab32.controller.dto.TariffRequest;
+import com.github.lemongrab32.controller.dto.TariffDto;
 import com.github.lemongrab32.controller.dto.TariffResponse;
 import com.github.lemongrab32.model.Tariff;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public interface TariffService {
 	 * @param pageable параметры пагинации
 	 * @return страница с указанным количеством тарифов
 	 */
-	List<TariffRequest> getTariffs(Pageable pageable);
+	List<TariffDto> getTariffs(Pageable pageable);
 
 	/**
 	 * Получение тарифа по его идентификатору
@@ -32,7 +31,7 @@ public interface TariffService {
 	 * @param request данные добавляемого тарифа
 	 * @return dto с информацией о выполнении операции
 	 */
-	TariffResponse save(TariffRequest request);
+	TariffResponse save(TariffDto request);
 
 	/**
 	 * Обновление данных тарифа
@@ -40,7 +39,7 @@ public interface TariffService {
 	 * @param request новые данные
 	 * @return dto с информацией о выполнении операции
 	 */
-	TariffResponse update(Integer tariffId, TariffRequest request);
+	TariffResponse update(Integer tariffId, TariffDto request);
 
 	/**
 	 * Удаление тарифа

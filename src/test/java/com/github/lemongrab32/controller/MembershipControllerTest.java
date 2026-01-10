@@ -2,6 +2,8 @@ package com.github.lemongrab32.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.lemongrab32.controller.dto.*;
+import com.github.lemongrab32.model.ClientCategory;
+import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.service.MembershipService;
 import com.github.lemongrab32.type.MembershipConfig;
 import com.github.lemongrab32.type.Messages;
@@ -21,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -40,7 +43,10 @@ public class MembershipControllerTest {
 	private MembershipController controller;
 
 	private final MembershipRequest membershipRequest =
-		Instancio.create(MembershipRequest.class);
+		new MembershipRequest(
+			UUID.randomUUID(), ClientCategory.ADULT, ClientType.PRIVATE,
+			1, 3, null, null
+		);
 
 	private AutoCloseable mocks;
 
@@ -95,49 +101,6 @@ public class MembershipControllerTest {
 				.content(json)
 			)
 			.andExpect(status().isCreated())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(responseJson));
-	}
-
-	@Test
-	@DisplayName("Обработка запроса на получение текущих параметров для расчёта стоимости абонемента")
-	public void getProperties() throws Exception {
-		Map<String, Object> response = Collections.singletonMap(
-			MembershipConfig.PRIVATE_MID_DISCOUNT, 0.06
-		);
-		String json = mapper.writeValueAsString(response);
-
-		Mockito.when(membershipService.getProperties())
-			.thenReturn(response);
-
-		mockMvc.perform(get(urlPrefix + "/config"))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(content().json(json));
-	}
-
-	@Test
-	@DisplayName("Обработка запроса на установку нового значения одного из параметров")
-	public void setProperty() throws Exception {
-		PropertyRequest request = new PropertyRequest(
-			MembershipConfig.PRIVATE_MID_DISCOUNT, 0.07);
-		String valueStr = request.value().toString();
-
-		PropertyResponse response = new PropertyResponse(
-			Status.SUCCESS, Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE, valueStr
-		);
-		String responseJson = mapper.writeValueAsString(response);
-
-		String json = mapper.writeValueAsString(request);
-
-		Mockito.when(membershipService.setProperty(request))
-			.thenReturn(response);
-
-		mockMvc.perform(put(urlPrefix + "/config")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(json)
-			)
-			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(content().json(responseJson));
 	}

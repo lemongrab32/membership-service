@@ -115,7 +115,6 @@ public class RedisIntegrationTest {
 		Mockito.when(membershipConfigRepository.getProperties())
 			.thenReturn(props);
 
-		membershipService.calculateMembership(request);
 		CalculationResponse response = membershipService.calculateMembership(request);
 		String key = request.category().toString() +
 			request.type().toString() +

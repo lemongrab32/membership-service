@@ -4,6 +4,9 @@ import com.github.lemongrab32.controller.dto.MembershipRequest;
 import com.github.lemongrab32.util.MembershipCalculator;
 import lombok.AllArgsConstructor;
 
+/**
+ * Калькулятор, рассчитывающий стоимость абонементов корпоративных клиентов
+ */
 @AllArgsConstructor
 public class EnterpriseMembershipCalculator extends MembershipCalculator {
 
