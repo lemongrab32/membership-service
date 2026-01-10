@@ -1,6 +1,6 @@
 package com.github.lemongrab32.type.constraints;
 
-import com.github.lemongrab32.util.EnumNamePatternValidator;
+import com.github.lemongrab32.util.ValueOfEnumValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -17,13 +17,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Documented
-@Constraint(validatedBy = EnumNamePatternValidator.class)
-public @interface EnumNamePattern {
+@Constraint(validatedBy = ValueOfEnumValidator.class)
+public @interface ValueOfEnum {
 
 	/**
-	 * Регулярное выражение для поиска по содержимому перечислений
+	 * Класс перечисления для валидации совпадения возможных значений
 	 */
-	String regexp();
+	Class<? extends Enum<?>> enumClass();
 
 	/**
 	 * Сообщение, которое будет показано при ошибке валидации

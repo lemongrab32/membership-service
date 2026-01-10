@@ -38,7 +38,8 @@ public class TariffControllerTest {
 	@InjectMocks
 	private TariffController tariffController;
 
-	private final TariffDto tariffDto = Instancio.create(TariffDto.class);
+	private final TariffDto tariffDto =
+		new TariffDto("testTariff", 2400.0, "ADULT", "PRIVATE");
 
 	private AutoCloseable mocks;
 

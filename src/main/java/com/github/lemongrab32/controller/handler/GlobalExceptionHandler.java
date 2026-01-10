@@ -4,6 +4,7 @@ import com.github.lemongrab32.controller.dto.CalculationResponse;
 import com.github.lemongrab32.controller.dto.PropertyResponse;
 import com.github.lemongrab32.controller.dto.TariffResponse;
 import com.github.lemongrab32.exception.InvalidClientOptionsException;
+import com.github.lemongrab32.exception.PaginationException;
 import com.github.lemongrab32.exception.TariffNotFoundException;
 import com.github.lemongrab32.exception.UnknownPropertyException;
 import com.github.lemongrab32.type.Status;
@@ -76,6 +77,12 @@ public class GlobalExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	public TariffResponse handleTariffNotFoundException(TariffNotFoundException ex) {
 		return new TariffResponse(Status.ERROR, ex.getMessage(), ex.getTariffId());
+	}
+
+	@ExceptionHandler(PaginationException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	public TariffResponse handlePaginationException(PaginationException ex) {
+		return new TariffResponse(Status.ERROR, ex.getMessage(), null);
 	}
 
 	/**

@@ -67,7 +67,7 @@ public class RedisIntegrationTest {
 	private KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
 	private final MembershipRequest request = new MembershipRequest(
-		UUID.randomUUID(), ClientCategory.ADULT, ClientType.PRIVATE,
+		UUID.randomUUID(), "ADULT", "PRIVATE",
 		1, 3, null, null
 	);
 
@@ -116,8 +116,8 @@ public class RedisIntegrationTest {
 			.thenReturn(props);
 
 		CalculationResponse response = membershipService.calculateMembership(request);
-		String key = request.category().toString() +
-			request.type().toString() +
+		String key = request.clientCategory().toString() +
+			request.clientType().toString() +
 			request.donation() +
 			request.months() +
 			request.hours() +

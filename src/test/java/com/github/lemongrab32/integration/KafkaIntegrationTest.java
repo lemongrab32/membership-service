@@ -68,7 +68,7 @@ public class KafkaIntegrationTest {
 	private RedisCacheManager cacheManager;
 
 	private final MembershipRequest request = new MembershipRequest(
-		UUID.randomUUID(), ClientCategory.ADULT, ClientType.PRIVATE,
+		UUID.randomUUID(), "ADULT", "PRIVATE",
 		1, 3, null, null
 	);
 

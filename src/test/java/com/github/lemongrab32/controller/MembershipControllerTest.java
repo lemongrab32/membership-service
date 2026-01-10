@@ -5,10 +5,8 @@ import com.github.lemongrab32.controller.dto.*;
 import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.service.MembershipService;
-import com.github.lemongrab32.type.MembershipConfig;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
-import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,8 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,7 +40,7 @@ public class MembershipControllerTest {
 
 	private final MembershipRequest membershipRequest =
 		new MembershipRequest(
-			UUID.randomUUID(), ClientCategory.ADULT, ClientType.PRIVATE,
+			UUID.randomUUID(), "ADULT", "PRIVATE",
 			1, 3, null, null
 		);
 

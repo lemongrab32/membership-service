@@ -2,8 +2,6 @@ package com.github.lemongrab32.service;
 
 import com.github.lemongrab32.controller.dto.*;
 
-import java.util.Map;
-
 public interface MembershipService {
 
 	/**

@@ -9,9 +9,6 @@ import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.MembershipConfigRepository;
 import com.github.lemongrab32.repository.MembershipRepository;
 import com.github.lemongrab32.service.impl.DefaultMembershipService;
-import com.github.lemongrab32.service.impl.DefaultPropertyService;
-import com.github.lemongrab32.type.Messages;
-import com.github.lemongrab32.type.Status;
 import com.github.lemongrab32.util.mapper.MembershipMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +20,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -54,8 +50,8 @@ public class MembershipServiceTest {
 	private final MembershipRequest request =
 		new MembershipRequest(
 			UUID.randomUUID(),
-			ClientCategory.ADULT,
-			ClientType.PRIVATE,
+			"ADULT",
+			"PRIVATE",
 			1, 4, null,
 			null
 		);
