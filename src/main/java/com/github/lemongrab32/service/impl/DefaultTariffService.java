@@ -49,6 +49,9 @@ public class DefaultTariffService implements TariffService {
 
 	@Override
 	public TariffResponse update(Integer tariffId, TariffDto request) {
+		if (!repository.existsById(tariffId)) {
+			throw new TariffNotFoundException(Messages.TARIFF_NOT_FOUND_MESSAGE, tariffId);
+		}
 		var tariff = mapper.toTariff(request);
 
 		tariff.setId(tariffId);
