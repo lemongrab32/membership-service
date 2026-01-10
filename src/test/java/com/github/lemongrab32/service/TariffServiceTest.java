@@ -1,6 +1,8 @@
 package com.github.lemongrab32.service;
 
 import com.github.lemongrab32.controller.dto.TariffDto;
+import com.github.lemongrab32.model.ClientCategory;
+import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.TariffRepository;
 import com.github.lemongrab32.service.impl.DefaultTariffService;
@@ -64,7 +66,8 @@ public class TariffServiceTest {
 		Mockito.when(tariffMapper.toDto(tariff)).thenReturn(
 			new TariffDto(
 				tariff.getName(), tariff.getBasePrice(),
-				tariff.getClientCategory(), tariff.getClientType()
+				tariff.getClientCategory().toString(),
+				tariff.getClientType().toString()
 			)
 		);
 
@@ -80,7 +83,8 @@ public class TariffServiceTest {
 	public void save() {
 		TariffDto request = new TariffDto(
 			tariff.getName(), tariff.getBasePrice(),
-			tariff.getClientCategory(), tariff.getClientType()
+			tariff.getClientCategory().toString(),
+			tariff.getClientType().toString()
 		);
 
 		Mockito.when(tariffRepository.save(Mockito.any())).thenReturn(tariff);
@@ -98,15 +102,16 @@ public class TariffServiceTest {
 	public void update() {
 		TariffDto request = new TariffDto(
 			"testName", 1.0,
-			tariff.getClientCategory(), tariff.getClientType()
+			tariff.getClientCategory().toString(), tariff.getClientType().toString()
 		);
 
+		Mockito.when(tariffRepository.existsById(tariff.getId())).thenReturn(true);
 		Mockito.when(tariffRepository.save(tariff)).thenReturn(tariff);
 		Mockito.when(tariffMapper.toTariff(request)).thenReturn(
 			Tariff.builder()
 				.id(tariff.getId()).basePrice(request.basePrice())
-				.clientCategory(request.clientCategory())
-				.clientType(request.clientType())
+				.clientCategory(ClientCategory.valueOf(request.clientCategory()))
+				.clientType(ClientType.valueOf(request.clientType()))
 				.build()
 		);
 

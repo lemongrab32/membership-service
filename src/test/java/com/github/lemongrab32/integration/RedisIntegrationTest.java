@@ -67,7 +67,7 @@ public class RedisIntegrationTest {
 	private KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
 	private final MembershipRequest request = new MembershipRequest(
-		UUID.randomUUID(), ClientCategory.ADULT, ClientType.PRIVATE,
+		UUID.randomUUID(), "ADULT", "PRIVATE",
 		1, 3, null, null
 	);
 
