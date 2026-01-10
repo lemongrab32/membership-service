@@ -8,6 +8,7 @@ import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.MembershipConfigRepository;
 import com.github.lemongrab32.repository.MembershipRepository;
 import com.github.lemongrab32.service.MembershipService;
+import com.github.lemongrab32.service.PropertyService;
 import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
@@ -32,6 +33,7 @@ public class DefaultMembershipService implements MembershipService {
 	private final MembershipRepository membershipRepository;
 	private final MembershipConfigRepository membershipConfigRepository;
 	private final TariffService tariffService;
+	private final PropertyService propertyService;
 	private final PaymentServiceClient paymentServiceClient = new PaymentServiceClient();
 	private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
 
@@ -47,7 +49,7 @@ public class DefaultMembershipService implements MembershipService {
 			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
 		}
 
-		var props = getProperties(); // получение параметров для расчёта
+		var props = propertyService.getProperties(); // получение параметров для расчёта
 		MembershipCalculator calculator = MembershipCalculator.getInstance(request.type(), props); // вызов фабричного метода для получения калькулятора на основании типа клиента
 
 		return new CalculationResponse(
@@ -101,20 +103,6 @@ public class DefaultMembershipService implements MembershipService {
 			Status.SUCCESS,
 			Messages.MEMBERSHIP_SUCCESS_MESSAGE,
 			request.tariffId()
-		);
-	}
-
-	@Override
-	public Map<String, Object> getProperties() {
-		return membershipConfigRepository.getProperties();
-	}
-
-	@Override
-	public PropertyResponse setProperty(PropertyRequest request) {
-		return new PropertyResponse(
-			Status.SUCCESS,
-			Messages.PROPERTY_UPDATE_SUCCESS_MESSAGE,
-			membershipConfigRepository.setProperty(request)
 		);
 	}
 

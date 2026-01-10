@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class PaymentServiceClient {
 
 	public void createPayment(PaymentRequest request) {
-		log.info("Платёж для создан для запроса {}", request);
+		log.info("Платёж создан для запроса {}", request);
 	}
 
 }

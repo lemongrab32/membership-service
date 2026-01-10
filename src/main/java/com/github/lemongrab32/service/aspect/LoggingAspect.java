@@ -29,7 +29,12 @@ public class LoggingAspect {
 		String methodName = joinPoint.getSignature().getName();
 		var args = joinPoint.getArgs();
 
-		Object request = (args.length > 1) ? args[1] : args[0];
+		Object request;
+		try {
+			request = (args.length > 1) ? args[1] : args[0];
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			request = 0;
+		}
 
 		log.info("{}.{}() is executing with next request: {}", className, methodName, request.toString());
 	}

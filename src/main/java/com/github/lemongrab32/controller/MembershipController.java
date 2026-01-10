@@ -40,14 +40,4 @@ public class MembershipController {
 		return ResponseEntity.ok(membershipService.calculateMembership(request));
 	}
 
-	@GetMapping("/config")
-	public ResponseEntity<Map<String, Object>> getProperties() {
-		return ResponseEntity.ok(membershipService.getProperties());
-	}
-
-	@PutMapping("/config")
-	public ResponseEntity<PropertyResponse> setProperty(@RequestBody @Validated PropertyRequest request) {
-		return ResponseEntity.ok(membershipService.setProperty(request));
-	}
-
 }
