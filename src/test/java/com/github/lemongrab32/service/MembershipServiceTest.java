@@ -12,6 +12,7 @@ import com.github.lemongrab32.service.impl.DefaultMembershipService;
 import com.github.lemongrab32.service.impl.DefaultPropertyService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
+import com.github.lemongrab32.util.mapper.MembershipMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +41,9 @@ public class MembershipServiceTest {
 
 	@Mock
 	private PropertyService propertyService;
+
+	@Mock
+	private MembershipMapper mapper;
 
 	@Mock
 	private KafkaTemplate<String, NotificationRequest> kafkaTemplate;
@@ -106,6 +110,7 @@ public class MembershipServiceTest {
 
 		Mockito.doNothing().when(paymentServiceClient).createPayment(Mockito.any());
 		Mockito.when(membershipRepository.save(Mockito.any())).thenReturn(membership);
+		Mockito.when(mapper.toMembership(request)).thenReturn(membership);
 
 		var response = membershipService.getMembership(request);
 

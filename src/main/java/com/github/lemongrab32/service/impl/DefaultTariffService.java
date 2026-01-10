@@ -1,14 +1,14 @@
 package com.github.lemongrab32.service.impl;
 
 import com.github.lemongrab32.exception.TariffNotFoundException;
-import com.github.lemongrab32.controller.dto.TariffRequest;
+import com.github.lemongrab32.controller.dto.TariffDto;
 import com.github.lemongrab32.controller.dto.TariffResponse;
 import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.TariffRepository;
-import com.github.lemongrab32.service.MembershipService;
 import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
+import com.github.lemongrab32.util.mapper.TariffMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,15 +23,12 @@ import java.util.List;
 public class DefaultTariffService implements TariffService {
 
 	private final TariffRepository repository;
+	private final TariffMapper mapper;
 
 	@Override
-	public List<TariffRequest> getTariffs(Pageable pageable) {
+	public List<TariffDto> getTariffs(Pageable pageable) {
 		return repository.findAll(pageable).get().map(
-			tariff -> new TariffRequest(
-				tariff.getName(),
-				tariff.getBasePrice(),
-				tariff.getClientCategory(),
-				tariff.getClientType())
+			mapper::toDto
 		).toList();
 	}
 
@@ -42,28 +39,19 @@ public class DefaultTariffService implements TariffService {
 	}
 
 	@Override
-	public TariffResponse save(TariffRequest request) {
+	public TariffResponse save(TariffDto request) {
 		Tariff saved = repository.save(
-			Tariff.builder()
-				.name(request.name())
-				.basePrice(request.basePrice())
-				.clientCategory(request.category())
-				.clientType(request.type())
-				.build()
+			mapper.toTariff(request)
 		);
 
 		return new TariffResponse(Status.SUCCESS, Messages.TARIFF_SAVE_SUCCESS_MESSAGE, saved.getId());
 	}
 
 	@Override
-	public TariffResponse update(Integer tariffId, TariffRequest request) {
-		var tariff = repository.findById(tariffId)
-			.orElseThrow(() -> new TariffNotFoundException(Messages.TARIFF_NOT_FOUND_MESSAGE, tariffId));
+	public TariffResponse update(Integer tariffId, TariffDto request) {
+		var tariff = mapper.toTariff(request);
 
-		tariff.setName(request.name());
-		tariff.setBasePrice(request.basePrice());
-		tariff.setClientCategory(request.category());
-		tariff.setClientType(request.type());
+		tariff.setId(tariffId);
 
 		repository.save(tariff);
 

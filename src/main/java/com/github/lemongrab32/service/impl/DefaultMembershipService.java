@@ -13,6 +13,7 @@ import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
 import com.github.lemongrab32.util.MembershipCalculator;
+import com.github.lemongrab32.util.mapper.MembershipMapper;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,6 +37,7 @@ public class DefaultMembershipService implements MembershipService {
 	private final PropertyService propertyService;
 	private final PaymentServiceClient paymentServiceClient = new PaymentServiceClient();
 	private final KafkaTemplate<String, NotificationRequest> kafkaTemplate;
+	private final MembershipMapper mapper;
 
 	@Override
 	@Cacheable(value = "CALC_CACHE", key = "#request.category().toString() + " +
@@ -73,13 +75,7 @@ public class DefaultMembershipService implements MembershipService {
 		}
 
 		LocalDate startDate = LocalDate.now();
-		var membership = Membership.builder()
-			.clientId(request.clientId())
-			.startDate(startDate)
-			.isActive(true)
-			.finalPrice(finalPrice)
-			.tariffId(request.tariffId())
-			.build();
+		var membership = mapper.toMembership(request);
 		if (request.hours() == null) {
 			membership.setEndDate(startDate.plusMonths(request.months()));
 		} else {

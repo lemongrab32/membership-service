@@ -1,7 +1,7 @@
 package com.github.lemongrab32.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.lemongrab32.controller.dto.TariffRequest;
+import com.github.lemongrab32.controller.dto.TariffDto;
 import com.github.lemongrab32.controller.dto.TariffResponse;
 import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
@@ -38,7 +38,7 @@ public class TariffControllerTest {
 	@InjectMocks
 	private TariffController tariffController;
 
-	private final TariffRequest tariffRequest = Instancio.create(TariffRequest.class);
+	private final TariffDto tariffDto = Instancio.create(TariffDto.class);
 
 	private AutoCloseable mocks;
 
@@ -73,9 +73,9 @@ public class TariffControllerTest {
 		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.TARIFF_SAVE_SUCCESS_MESSAGE, 1);
 		String response = mapper.writeValueAsString(tariffResponse);
 
-		String request = mapper.writeValueAsString(tariffRequest);
+		String request = mapper.writeValueAsString(tariffDto);
 
-		Mockito.when(tariffService.save(tariffRequest)).thenReturn(tariffResponse);
+		Mockito.when(tariffService.save(tariffDto)).thenReturn(tariffResponse);
 
 		mockMvc.perform(
 				post(urlPrefix)
@@ -93,9 +93,9 @@ public class TariffControllerTest {
 		TariffResponse tariffResponse = new TariffResponse(Status.SUCCESS, Messages.TARIFF_UPDATE_SUCCESS_MESSAGE, 1);
 		String response = mapper.writeValueAsString(tariffResponse);
 
-		String request = mapper.writeValueAsString(tariffRequest);
+		String request = mapper.writeValueAsString(tariffDto);
 
-		Mockito.when(tariffService.update(1, tariffRequest)).thenReturn(tariffResponse);
+		Mockito.when(tariffService.update(1, tariffDto)).thenReturn(tariffResponse);
 
 		mockMvc.perform(
 				put(urlPrefix + "/1")
