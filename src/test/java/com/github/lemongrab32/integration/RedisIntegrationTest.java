@@ -116,8 +116,8 @@ public class RedisIntegrationTest {
 			.thenReturn(props);
 
 		CalculationResponse response = membershipService.calculateMembership(request);
-		String key = request.category().toString() +
-			request.type().toString() +
+		String key = request.clientCategory().toString() +
+			request.clientType().toString() +
 			request.donation() +
 			request.months() +
 			request.hours() +

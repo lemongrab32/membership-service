@@ -4,7 +4,6 @@ import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.model.Tariff;
 import com.github.lemongrab32.repository.TariffRepository;
-import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -2,6 +2,7 @@ package com.github.lemongrab32.controller;
 
 import com.github.lemongrab32.controller.dto.TariffDto;
 import com.github.lemongrab32.controller.dto.TariffResponse;
+import com.github.lemongrab32.exception.PaginationException;
 import com.github.lemongrab32.service.TariffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,13 @@ public class TariffController {
 		@RequestParam(name = "offset", defaultValue = "0") int offset,
 		@RequestParam(name = "limit", defaultValue = "10") int limit
 	) {
-		return ResponseEntity.ok(tariffService.getTariffs(PageRequest.of(offset, limit)));
+		PageRequest request;
+		try {
+			request = PageRequest.of(offset, limit);
+		} catch (IllegalArgumentException ex) {
+			throw new PaginationException("Заданы некорректные параметры пагинации");
+		}
+		return ResponseEntity.ok(tariffService.getTariffs(request));
 	}
 
 	/**

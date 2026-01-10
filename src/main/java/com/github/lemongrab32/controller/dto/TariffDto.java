@@ -5,8 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.type.Messages;
-import com.github.lemongrab32.type.constraints.EnumNamePattern;
-import com.github.lemongrab32.util.EnumNamePatternValidator;
+import com.github.lemongrab32.type.constraints.ValueOfEnum;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -15,8 +14,8 @@ import jakarta.validation.constraints.Size;
  * DTO запроса на добавление нового или обновление существующего тарифа
  * @param name наименование тарифа
  * @param basePrice базовая стоимость 1 месяца занятий по тарифу
- * @param category возрастная категория клиента
- * @param type тип клиента
+ * @param clientCategory возрастная категория клиента
+ * @param clientType тип клиента
  */
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record TariffDto(
@@ -29,16 +28,17 @@ public record TariffDto(
 	Double basePrice,
 
 	@NotNull(message = Messages.VALIDATION_NOT_NULL_MESSAGE)
-	@EnumNamePattern(
-		regexp = EnumNamePatternValidator.CATEGORY_PATTERN,
+	@ValueOfEnum(
+		enumClass = ClientCategory.class,
 		message = Messages.VALIDATION_CATEGORY_INCORRECT_MESSAGE
 	)
-	ClientCategory category,
+	String clientCategory,
 
 	@NotNull(message = Messages.VALIDATION_NOT_NULL_MESSAGE)
-	@EnumNamePattern(
-		regexp = EnumNamePatternValidator.TYPE_PATTERN,
+	@ValueOfEnum(
+		enumClass = ClientType.class,
 		message = Messages.VALIDATION_TYPE_INCORRECT_MESSAGE
 	)
-	ClientType type
+	String clientType
+
 ) {}

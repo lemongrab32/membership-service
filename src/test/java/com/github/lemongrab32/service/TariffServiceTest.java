@@ -105,8 +105,8 @@ public class TariffServiceTest {
 		Mockito.when(tariffMapper.toTariff(request)).thenReturn(
 			Tariff.builder()
 				.id(tariff.getId()).basePrice(request.basePrice())
-				.clientCategory(request.category())
-				.clientType(request.type())
+				.clientCategory(request.clientCategory())
+				.clientType(request.clientType())
 				.build()
 		);
 

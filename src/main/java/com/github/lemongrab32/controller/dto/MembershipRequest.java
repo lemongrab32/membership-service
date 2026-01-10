@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.type.Messages;
-import com.github.lemongrab32.type.constraints.EnumNamePattern;
-import com.github.lemongrab32.util.EnumNamePatternValidator;
+import com.github.lemongrab32.type.constraints.ValueOfEnum;
+import com.github.lemongrab32.util.ValueOfEnumValidator;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -17,8 +17,8 @@ import java.util.UUID;
 /**
  * DTO запроса на расчёт стоимости абонемента или его оформления
  * @param clientId идентификатор клиента
- * @param category возрастная категория клиента
- * @param type тип клиента
+ * @param clientCategory возрастная категория клиента
+ * @param clientType тип клиента
  * @param tariffId идентификатор тарифа, по которому оформляется абонемент
  * @param months срок действия оформляемого абонемента в месяцах
  * @param hours количество часов для абонемента с почасовой оплатой (частные клиенты)
@@ -29,18 +29,18 @@ public record MembershipRequest(
 	UUID clientId,
 
 	@NotNull(message = Messages.VALIDATION_NOT_NULL_MESSAGE)
-	@EnumNamePattern(
-		regexp = EnumNamePatternValidator.CATEGORY_PATTERN,
+	@ValueOfEnum(
+		enumClass = ClientCategory.class,
 		message = Messages.VALIDATION_CATEGORY_INCORRECT_MESSAGE
 	)
-	ClientCategory category,
+	String clientCategory,
 
 	@NotNull(message = Messages.VALIDATION_NOT_NULL_MESSAGE)
-	@EnumNamePattern(
-		regexp = EnumNamePatternValidator.TYPE_PATTERN,
+	@ValueOfEnum(
+		enumClass = ClientType.class,
 		message = Messages.VALIDATION_TYPE_INCORRECT_MESSAGE
 	)
-	ClientType type,
+	String clientType,
 
 	@Positive(message = Messages.VALIDATION_POSITIVE_MESSAGE)
 	@NotNull(message = Messages.VALIDATION_NOT_NULL_MESSAGE)

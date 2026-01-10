@@ -1,14 +1,12 @@
 package com.github.lemongrab32.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.lemongrab32.controller.dto.MembershipRequest;
 import com.github.lemongrab32.controller.dto.PropertyRequest;
 import com.github.lemongrab32.controller.dto.PropertyResponse;
 import com.github.lemongrab32.service.PropertyService;
 import com.github.lemongrab32.type.MembershipConfig;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
-import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
