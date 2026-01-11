@@ -19,12 +19,12 @@ public class EnterpriseMembershipCalculator extends MembershipCalculator {
 	public double calculate(MembershipRequest request, Double basePrice) {
 		double donation = request.donation();
 
-		if (donation >= top) {
-			return request.months() * (basePrice - basePrice * maxMultiplier);
-		} else if (donation >= bottom) {
+		if (donation >= bottom && donation <= top) {
 			return request.months() * (basePrice - basePrice * midMultiplier);
-		} else {
+		} else if (donation < bottom) {
 			return request.months() * basePrice;
+		} else {
+			return request.months() * (basePrice - basePrice * maxMultiplier);
 		}
 	}
 
