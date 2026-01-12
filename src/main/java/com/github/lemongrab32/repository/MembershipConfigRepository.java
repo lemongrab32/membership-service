@@ -46,7 +46,7 @@ public class MembershipConfigRepository {
 
 		properties.put(request.name(), request.value());
 
-		return request.value().toString();
+		return request.name();
 	}
 
 }
