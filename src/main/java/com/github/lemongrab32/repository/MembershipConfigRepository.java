@@ -30,8 +30,8 @@ public class MembershipConfigRepository {
 		properties.put(MembershipConfig.PRIVATE_HOUR_MULTIPLIER, 0.15);
 		properties.put(MembershipConfig.ENTERPRISE_MID_DISCOUNT, 0.05);
 		properties.put(MembershipConfig.ENTERPRISE_MAX_DISCOUNT, 0.1);
-		properties.put(MembershipConfig.ENTERPRISE_DONATION_BOUND_BOTTOM, 10000);
-		properties.put(MembershipConfig.ENTERPRISE_DONATION_BOUND_TOP, 50000);
+		properties.put(MembershipConfig.ENTERPRISE_DONATION_BOUND_BOTTOM, 10000.0d);
+		properties.put(MembershipConfig.ENTERPRISE_DONATION_BOUND_TOP, 50000.0d);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class MembershipConfigRepository {
 
 		properties.put(request.name(), request.value());
 
-		return request.value().toString();
+		return request.name();
 	}
 
 }

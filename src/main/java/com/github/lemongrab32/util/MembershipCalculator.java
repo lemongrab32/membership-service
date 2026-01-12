@@ -32,8 +32,8 @@ public abstract class MembershipCalculator {
 				return new EnterpriseMembershipCalculator(
 					(Double) props.get(MembershipConfig.ENTERPRISE_MID_DISCOUNT),
 					(Double) props.get(MembershipConfig.ENTERPRISE_MAX_DISCOUNT),
-					(Double) props.get(MembershipConfig.ENTERPRISE_DONATION_BOUND_BOTTOM),
-					(Double) props.get(MembershipConfig.ENTERPRISE_DONATION_BOUND_TOP)
+					(Double) props.get(MembershipConfig.ENTERPRISE_DONATION_BOUND_TOP),
+					(Double) props.get(MembershipConfig.ENTERPRISE_DONATION_BOUND_BOTTOM)
 				);
 			}
 			default -> {

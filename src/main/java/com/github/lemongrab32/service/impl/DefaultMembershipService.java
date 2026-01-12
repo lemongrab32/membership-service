@@ -73,13 +73,18 @@ public class DefaultMembershipService implements MembershipService {
 			throw new InvalidClientOptionsException(Messages.INVALID_CLIENT_OPTIONS_MESSAGE);
 		}
 
-		LocalDate startDate = LocalDate.now();
 		var membership = mapper.toMembership(request);
+
+		LocalDate startDate = LocalDate.now();
+		membership.setStartDate(startDate);
 		if (request.hours() == null) {
 			membership.setEndDate(startDate.plusMonths(request.months()));
 		} else {
 			membership.setHoursRemaining(request.hours());
 		}
+
+		membership.setActive(true);
+		membership.setFinalPrice(finalPrice);
 
 		var saved = membershipRepository.save(membership);
 
