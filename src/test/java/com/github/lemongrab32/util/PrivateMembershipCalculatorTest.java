@@ -65,4 +65,17 @@ public class PrivateMembershipCalculatorTest {
 		assertEquals(17280.0, calculated, 0.001);
 	}
 
+	@Test
+	@DisplayName("Расчёт с указанием количества часов")
+	public void testHourlyPay() {
+		var request = new MembershipRequest(
+			null, "ADULT", "PRIVATE",
+			null, 8, 7, null
+		);
+
+		double calculated = calculator.calculate(request, 2400.0);
+
+		assertEquals(2520.0, calculated, 0.001);
+	}
+
 }

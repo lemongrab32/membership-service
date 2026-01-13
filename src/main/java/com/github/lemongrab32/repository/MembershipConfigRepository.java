@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -47,6 +48,10 @@ public class MembershipConfigRepository {
 		properties.put(request.name(), request.value());
 
 		return request.name();
+	}
+
+	public Optional<Object> getProperty(String propertyName) {
+		return Optional.ofNullable(properties.get(propertyName));
 	}
 
 }

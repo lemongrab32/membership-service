@@ -1,6 +1,7 @@
 package com.github.lemongrab32.service;
 
 import com.github.lemongrab32.controller.dto.TariffDto;
+import com.github.lemongrab32.exception.TariffNotFoundException;
 import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.model.Tariff;
@@ -26,7 +27,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TariffServiceTest {
 
@@ -79,6 +80,25 @@ public class TariffServiceTest {
 	}
 
 	@Test
+	@DisplayName("Получение тарифа по его id")
+	public void findOneById() {
+		Mockito.when(tariffRepository.findById(tariff.getId())).thenReturn(Optional.of(tariff));
+
+		var result = tariffService.getTariffById(tariff.getId());
+
+		assertEquals(tariff, result);
+	}
+
+	@Test
+	@DisplayName("Получение тарифа по несуществующему id")
+	public void findOneByIncorrectId() {
+		Integer id = tariff.getId() + 20;
+		Mockito.when(tariffRepository.findById(id)).thenReturn(Optional.empty());
+
+		assertThrows(TariffNotFoundException.class, () -> tariffService.getTariffById(id));
+	}
+
+	@Test
 	@DisplayName("Добавление нового тарифа")
 	public void save() {
 		TariffDto request = new TariffDto(
@@ -119,6 +139,13 @@ public class TariffServiceTest {
 
 		assertEquals(Status.SUCCESS, response.status());
 		assertEquals(Messages.TARIFF_UPDATE_SUCCESS_MESSAGE, response.message());
+	}
+
+	@Test
+	@DisplayName("Обновление данных тарифа с указанием несуществующего id")
+	public void updateWrongId() {
+		assertThrows(TariffNotFoundException.class,
+			() -> tariffService.update(tariff.getId(), null));
 	}
 
 	@Test
