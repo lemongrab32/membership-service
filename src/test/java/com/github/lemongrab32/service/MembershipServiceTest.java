@@ -2,6 +2,7 @@ package com.github.lemongrab32.service;
 
 import com.github.lemongrab32.client.PaymentServiceClient;
 import com.github.lemongrab32.controller.dto.*;
+import com.github.lemongrab32.exception.InvalidClientOptionsException;
 import com.github.lemongrab32.model.ClientCategory;
 import com.github.lemongrab32.model.ClientType;
 import com.github.lemongrab32.model.Membership;
@@ -96,8 +97,21 @@ public class MembershipServiceTest {
 	}
 
 	@Test
+	@DisplayName("Расчёт стоимости абонемента с некорректными данными клиента")
+	public void calculateMembershipIncorrectClientData() {
+		var request = new  MembershipRequest(
+			null, ClientCategory.CHILD.toString(),
+			ClientType.ENTERPRISE.toString(), tariff.getId(),
+			3, null, 10000.0
+		);
+
+		assertThrows(InvalidClientOptionsException.class,
+			() -> membershipService.calculateMembership(request));
+	}
+
+	@Test
 	@DisplayName("Оформление абонемента")
-	public void getMembershipMembership() {
+	public void getMembership() {
 		final Membership membership = Membership.builder()
 			.id(1L)
 			.clientId(request.clientId())
@@ -112,6 +126,43 @@ public class MembershipServiceTest {
 
 		assertNotNull(response);
 		assertEquals(membership.getTariffId(), response.tariffId());
+	}
+
+	@Test
+	@DisplayName("Оформление абонемента с указанием количества часов")
+	public void getMembershipWithHours() {
+		var request = new  MembershipRequest(
+			UUID.randomUUID(), ClientCategory.ADULT.toString(),
+			ClientType.PRIVATE.toString(), tariff.getId(),
+			3, 7, null
+		);
+		final Membership membership = Membership.builder()
+			.id(1L)
+			.clientId(request.clientId())
+			.tariffId(request.tariffId())
+			.build();
+
+		Mockito.doNothing().when(paymentServiceClient).createPayment(Mockito.any());
+		Mockito.when(membershipRepository.save(Mockito.any())).thenReturn(membership);
+		Mockito.when(mapper.toMembership(request)).thenReturn(membership);
+
+		var response = membershipService.getMembership(request);
+
+		assertNotNull(response);
+		assertEquals(membership.getTariffId(), response.tariffId());
+	}
+
+	@Test
+	@DisplayName("Оформление абонемента без указания id клиента")
+	public void getMembershipWithoutClientId() {
+		var request = new  MembershipRequest(
+			null, ClientCategory.CHILD.toString(),
+			ClientType.ENTERPRISE.toString(), tariff.getId(),
+			3, null, 10000.0
+		);
+
+		assertThrows(InvalidClientOptionsException.class,
+			() -> membershipService.getMembership(request));
 	}
 
 }

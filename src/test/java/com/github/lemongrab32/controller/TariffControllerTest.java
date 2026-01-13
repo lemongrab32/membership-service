@@ -3,14 +3,12 @@ package com.github.lemongrab32.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.lemongrab32.controller.dto.TariffDto;
 import com.github.lemongrab32.controller.dto.TariffResponse;
+import com.github.lemongrab32.exception.PaginationException;
 import com.github.lemongrab32.service.TariffService;
 import com.github.lemongrab32.type.Messages;
 import com.github.lemongrab32.type.Status;
 import org.instancio.Instancio;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -66,6 +64,12 @@ public class TariffControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 			.andExpect(content().json(emptyList));
+	}
+
+	@Test
+	@DisplayName("Некорректные параметры пагинации")
+	public void getTariffsIncorrectPaginationParams() throws Exception {
+		Assertions.assertThrows(PaginationException.class, () -> tariffController.getTariffs(-1, -1));
 	}
 
 	@Test
