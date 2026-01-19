@@ -31,7 +31,6 @@ import java.time.LocalDate;
 public class DefaultMembershipService implements MembershipService {
 
 	private final MembershipRepository membershipRepository;
-	private final MembershipConfigRepository membershipConfigRepository;
 	private final TariffService tariffService;
 	private final PropertyService propertyService;
 	private final PaymentServiceClient paymentServiceClient = new PaymentServiceClient();

@@ -6,7 +6,7 @@ import com.github.lemongrab32.controller.dto.PropertyResponse;
 import java.util.Map;
 
 /**
- *
+ * Сервисный уровень для работы с параметрами для расчёта
  */
 public interface PropertyService {
 
